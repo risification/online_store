@@ -39,5 +39,5 @@ class Aboutus(models.Model):
 class Cotancts(models.Model):
     name_user = models.CharField(max_length=20,blank=True,null=True)
     last_name_user = models.CharField(max_length=20,blank=True,null=True)
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(max_length=10)
     email = models.EmailField()
