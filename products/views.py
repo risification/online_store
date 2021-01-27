@@ -40,3 +40,8 @@ def user_page(request):
 def description_page(request):
     des = Aboutus.objects.all()
     return render(request, 'products/description.html', {'des': des})
+
+
+def contacts_page(request):
+    cont = Cotancts.objects.all()
+    return render(request, 'products/contacts.html', {'cont': cont})

@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <td>Username</td>
+        <td>First Name</td>
+        <td>E-mail</td>
+        <td>Phone</td>
+    </tr>
+    {% for cont in cont %}
+        <tr>
+            <td>{{cont.name_user}}</td>
+            <td>{{cont.last_name_user}}</td>
+            <td>{{cont.email}}</td>
+            <td>{{cont.phone}}</td>
+        </tr>
+    {% endfor %}
+</table>

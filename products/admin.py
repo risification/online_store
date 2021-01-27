@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Products, Order, Aboutus
+from .models import Products, Order, Aboutus,Cotancts
 
 
 # Register your models here.
@@ -8,4 +8,4 @@ class Product_top(admin.ModelAdmin):
 
 
 admin.site.register(Products, Product_top)
-admin.site.register([Order, Aboutus])
+admin.site.register([Order, Aboutus,Cotancts])

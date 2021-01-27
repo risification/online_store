@@ -34,3 +34,10 @@ class Order(models.Model):
 class Aboutus(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
+
+
+class Cotancts(models.Model):
+    name_user = models.CharField(max_length=20)
+    last_name_user = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
