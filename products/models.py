@@ -41,3 +41,4 @@ class Cotancts(models.Model):
     last_name_user = models.CharField(max_length=20,blank=True,null=True)
     phone = models.CharField(max_length=10)
     email = models.EmailField()
+    address = models.CharField(max_length=50,blank=True,null=True)
