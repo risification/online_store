@@ -5,6 +5,8 @@
         <td>E-mail</td>
         <td>Phone</td>
         <td>Address</td>
+        <td>Latitude</td>
+        <td>Longtitude</td>
     </tr>
     {% for cont in cont %}
         <tr>
@@ -13,6 +15,8 @@
             <td>{{cont.email}}</td>
             <td>{{cont.phone}}</td>
             <td>{{cont.address}}</td>
+            <td>{{cont.lon}}</td>
+            <td>{{cont.lat}}</td>
         </tr>
     {% endfor %}
 </table>

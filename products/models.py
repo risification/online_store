@@ -42,3 +42,5 @@ class Cotancts(models.Model):
     phone = models.CharField(max_length=10)
     email = models.EmailField()
     address = models.CharField(max_length=50,blank=True,null=True)
+    lon = models.FloatField()
+    lat = models.FloatField()
