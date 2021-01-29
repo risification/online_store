@@ -16,7 +16,7 @@ def products_page(request):
 def order_page(request, product_id):
     try:
         product = Products.objects.get(id=product_id)
-        form = OrderForm(initial={'product':product})
+        form = OrderForm(initial={'product': product})
         if request.method == 'POST':
             form = OrderForm(request.POST)
             if form.is_valid():
@@ -26,6 +26,7 @@ def order_page(request, product_id):
     except Products.DoesNotExist:
         return HttpResponse('Not Found')
 
+
 def register_page(request):
     register = UserCreationForm()
     if request.method == 'POST':
@@ -34,7 +35,6 @@ def register_page(request):
             register.save()
             return redirect('products')
     return render(request, 'products/register.html', {'register': register})
-
 
 
 def user_page(request):
@@ -50,3 +50,14 @@ def description_page(request):
 def contacts_page(request):
     cont = Cotancts.objects.all()
     return render(request, 'products/contacts.html', {'cont': cont})
+
+
+def update_order(request, order_id):
+    order = Order.objects.get(id=order_id)
+    form = OrderForm(instance=order)
+    if request.method == "POST":
+        form = OrderForm(request.POST,instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('products')
+    return render(request, 'products/order.html', {'form': form})
