@@ -1,7 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from .models import *
 from .forms import OrderForm
 
@@ -56,7 +55,7 @@ def update_order(request, order_id):
     order = Order.objects.get(id=order_id)
     form = OrderForm(instance=order)
     if request.method == "POST":
-        form = OrderForm(request.POST,instance=order)
+        form = OrderForm(request.POST, instance=order)
         if form.is_valid():
             form.save()
             return redirect('products')

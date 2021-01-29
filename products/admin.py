@@ -8,7 +8,8 @@ class Product_top(admin.ModelAdmin):
 
 
 class Contacts_top(admin.ModelAdmin):
-    list_display = ['contact_type', 'name_user', 'last_name_user', 'phone', 'email', 'address', 'longtitude', 'latitude']
+    list_display = ['contact_type', 'name_user', 'last_name_user', 'phone', 'email', 'address', 'longtitude',
+                    'latitude']
 
 
 admin.site.register(Products, Product_top)

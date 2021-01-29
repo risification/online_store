@@ -1,28 +1,28 @@
 <table class="table table-dark">
-  <thead>
+    <thead>
     <tr>
-      <th scope="col">Contact_type</th>
-      <th scope="col">Name</th>
-      <th scope="col">Last_name</th>
-      <th scope="col">Phone</th>
-      <th scope="col">Email</th>
-      <th scope="col">Address</th>
-      <th scope="col">Langtitude</th>
-      <th scope="col">Latitude</th>
+        <th scope="col">Contact_type</th>
+        <th scope="col">Name</th>
+        <th scope="col">Last_name</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Email</th>
+        <th scope="col">Address</th>
+        <th scope="col">Langtitude</th>
+        <th scope="col">Latitude</th>
     </tr>
-  </thead>
-  <tbody>
-  {%for cont in cont%}
-        <tr>
-          <td>{{cont.contact_type}}</td>
-          <td>{{cont.name_user}}</td>
-          <td>{{cont.last_name_user}}</td>
-          <td>{{cont.phone}}</td>
-          <td>{{cont.email}}</td>
-          <td>{{cont.address}}</td>
-          <td>{{cont.longtitude}}</td>
-          <td>{{cont.latitude}}</td>
-        </tr>
-  {%endfor%}
-  </tbody>
+    </thead>
+    <tbody>
+    {%for cont in cont%}
+    <tr>
+        <td>{{cont.contact_type}}</td>
+        <td>{{cont.name_user}}</td>
+        <td>{{cont.last_name_user}}</td>
+        <td>{{cont.phone}}</td>
+        <td>{{cont.email}}</td>
+        <td>{{cont.address}}</td>
+        <td>{{cont.longtitude}}</td>
+        <td>{{cont.latitude}}</td>
+    </tr>
+    {%endfor%}
+    </tbody>
 </table>
