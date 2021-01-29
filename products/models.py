@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -25,6 +26,7 @@ class Order(models.Model):
         ('Beleivered', 'Belivered'),
         ('Not Belivered', 'Not bdelivered'),
     )
+    user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     product = models.ForeignKey(Products, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=1)
     status = models.CharField(max_length=20, choices=statuses, default='In products')
@@ -37,6 +39,12 @@ class Aboutus(models.Model):
 
 
 class Cotancts(models.Model):
+    contact_type = (
+        ('phone','phone'),
+        ('email','email'),
+        ('address','address')
+    )
+    contact_type = models.CharField(choices=contact_type,max_length=20)
     name_user = models.CharField(max_length=20)
     last_name_user = models.CharField(max_length=20)
     phone = models.CharField(max_length=10)

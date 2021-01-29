@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .models import *
@@ -12,15 +13,18 @@ def products_page(request):
     return render(request, 'products/product.html', {'products': products})
 
 
-def order_page(request):
-    form = OrderForm()
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('products')
-    return render(request, 'products/order.html', {'form': form})
-
+def order_page(request, product_id):
+    try:
+        product = Products.objects.get(id=product_id)
+        form = OrderForm(initial={'product':product})
+        if request.method == 'POST':
+            form = OrderForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect('products')
+        return render(request, 'products/order.html', {'form': form})
+    except Products.DoesNotExist:
+        return HttpResponse('Not Found')
 
 def register_page(request):
     register = UserCreationForm()
@@ -30,6 +34,7 @@ def register_page(request):
             register.save()
             return redirect('products')
     return render(request, 'products/register.html', {'register': register})
+
 
 
 def user_page(request):
