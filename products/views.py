@@ -36,9 +36,10 @@ def register_page(request):
     return render(request, 'products/register.html', {'register': register})
 
 
-def user_page(request):
-    user = User.objects.all()
-    return render(request, 'products/user.html', {'user': user})
+def user_page(request, user_id):
+    user = User.objects.get(id=user_id)
+    orders = user.order_set.all()
+    return render(request, 'products/users.html', {'user': user,'orders':orders})
 
 
 def description_page(request):
@@ -60,3 +61,9 @@ def update_order(request, order_id):
             form.save()
             return redirect('products')
     return render(request, 'products/order.html', {'form': form})
+
+
+def delete_order(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.delete()
+    return redirect('products')
