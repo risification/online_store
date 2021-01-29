@@ -1,2 +1,6 @@
 {{user.username}}
-{{orders}}
+
+{%for order in orders%}
+    {{order.product}}
+    {{order.quantity}}
+{% endfor %}
