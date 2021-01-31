@@ -1,6 +1,13 @@
-{{user.username}}
-
-{%for order in orders%}
-    {{order.product}}
-    {{order.quantity}}
-{% endfor %}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Orders</th>
+    </tr>
+    <tr>
+        <td>{{user.username}}</td>
+        {%for order in orders%}
+        <td>{{order.product}}</td>
+        <td>{{order.quantity}}</td>
+        {% endfor %}
+    </tr>
+</table>

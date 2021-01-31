@@ -39,7 +39,7 @@ def register_page(request):
 def user_page(request, user_id):
     user = User.objects.get(id=user_id)
     orders = user.order_set.all()
-    return render(request, 'products/users.html', {'user': user,'orders':orders})
+    return render(request, 'products/users.html', {'user': user, 'orders': orders})
 
 
 def description_page(request):
