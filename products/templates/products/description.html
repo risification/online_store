@@ -1,4 +1,7 @@
+{% extends 'products/base.html' %}
+{% block content %}
 {% for des in des %}
-    <h1>{{des.title}}</h1>
-    {{des.description}}
+<h1>{{des.title}}</h1>
+{{des.description}}
 {% endfor %}
+{% endblock %}
