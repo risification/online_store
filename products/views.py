@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -78,3 +78,7 @@ def login_page(request):
         login(request,user)
         return redirect('products')
     return render(request,'products/login.html')
+
+def logout_page(request):
+    logout(request)
+    return redirect('/')

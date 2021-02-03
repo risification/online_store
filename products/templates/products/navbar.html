@@ -32,12 +32,14 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         {% if request.user.is_authenticated %}
-        <p>
+        <p class="navbar-brand">
             Hello, {{request.user}}
         </p>
+            <a class="btn btn-outline-success my-2 my-sm-0" href="{%url 'logout'%}">Logout</a>
         {%else%}
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
+            <a class="nav-link" href="{% url 'register' %}">Register</a></li>
+        <li class="nav-item">
             <a class="nav-link" href="{%url 'login_page'%}">Login</a>
         </li>
         {%endif%}
