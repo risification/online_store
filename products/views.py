@@ -1,9 +1,9 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import *
-from .forms import OrderForm
+from .forms import *
+import math
 
 
 # Create your views here.
@@ -32,7 +32,8 @@ def register_page(request):
     if request.method == 'POST':
         register = UserCreationForm(request.POST)
         if register.is_valid():
-            register.save()
+            user = register.save()
+            Profile.objects.create(user=user)
             return redirect('products')
     return render(request, 'products/register.html', {'register': register})
 
@@ -74,11 +75,22 @@ def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request,username=username,password=password)
-        login(request,user)
+        user = authenticate(request, username=username, password=password)
+        login(request, user)
         return redirect('products')
-    return render(request,'products/login.html')
+    return render(request, 'products/login.html')
+
 
 def logout_page(request):
     logout(request)
     return redirect('/')
+
+def account_settings(request):
+    user = request.user.profile
+    form = ProfileForm(instance=user)
+    if request.method =="POST":
+        form = ProfileForm(request.POST,request.FILES,instance=user)
+        if form.is_valid():
+            form.save()
+    context = {'form': form}
+    return render(request,'products/profile.html',context)
