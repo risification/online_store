@@ -5,7 +5,7 @@ from .models import *
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['product', 'quantity', 'user']
+        fields = ['product', 'quantity', ]
 
 
 class ProfileForm(forms.ModelForm):

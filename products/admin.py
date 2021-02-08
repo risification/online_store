@@ -10,5 +10,5 @@ class Product_top(admin.ModelAdmin):
 
 
 admin.site.register(Products, Product_top)
-admin.site.register([Order, Aboutus,Profile])
+admin.site.register([Order, Aboutus, Profile])
 
