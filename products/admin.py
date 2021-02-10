@@ -4,7 +4,7 @@ from .models import *
 
 # Register your models here.
 class Product_top(admin.ModelAdmin):
-    list_display = ['image', 'name', 'description', 'type', 'price']
+    list_display = ['name','image' , 'description', 'type', 'price','sale']
 
 
 

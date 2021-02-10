@@ -18,15 +18,16 @@
 	<div class="main-w3layouts wrapper">
 		<h1>Creative SignUp Form</h1>
 		<div class="main-agileinfo">
+			<form method="POST" action="">
 			<div class="agileits-top">
-				<form method="POST" action="">
 					{% csrf_token %}
+					{{register.email}}
 					{{register.username}}
 					{{register.password1}}
 					{{register.password2}}
-					<input type="submit" name="SIGNUP">
-				</form>
+				<input type="submit" name="SIGNUP">
 			</div>
+		</form>
 		</div>
 		<ul class="colorlib-bubbles">
 			<li></li>

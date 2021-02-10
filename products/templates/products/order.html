@@ -4,6 +4,7 @@
     {% csrf_token %}
     {{ form }}
     <input type="submit" name="Submit">
-    {{total_price}}
+    <p>total price {{total_price}}</p>
+    <p>discount price {{discount_price}}</p>
 </form>
 {% endblock %}

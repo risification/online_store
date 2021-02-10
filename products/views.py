@@ -1,10 +1,17 @@
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
 from e_store.settings import EMAIL_HOST_USER
+from .forms import SignupForm
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from .models import Products, Aboutus, Cotancts, Order, Profile
+from .tokens import account_activation_token
+from django.contrib.auth.models import User
 from .forms import *
 import math
 
@@ -20,31 +27,48 @@ def order_page(request, product_id):
     try:
         product = Products.objects.get(id=product_id)
         total_price = 0
+        sale = 0.2
+        discount_price = 0
+
         form = OrderForm(initial={'product': product})
         if request.method == 'POST':
             form = OrderForm(request.POST)
             if form.is_valid():
                 form.save()
-                total_price = product.price * form.cleaned_data['quantity']
-        return render(request, 'products/order.html', {'form': form, 'total_price': total_price})
+                if product.sale:
+                    total_price = product.price * form.cleaned_data['quantity']
+                    discount_price = product.price * form.cleaned_data['quantity'] * sale
+                    total_price = total_price - discount_price
+                else:
+                    total_price = product.price * form.cleaned_data['quantity']
+        return render(request, 'products/order.html',
+                      {'form': form, 'total_price': total_price, 'discount_price': discount_price})
     except Products.DoesNotExist:
         return HttpResponse('Not Found')
 
 
 def register_page(request):
-    register = UserCreationForm()
+    register = SignupForm()
     if request.method == 'POST':
-        register = UserCreationForm(request.POST)
+        register = SignupForm(request.POST)
         if register.is_valid():
+            user = register.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
             subject = "welcome to our  site!!!"
-            body = "Activate your account!"
-            from_email = EMAIL_HOST_USER
-            to = register.cleaned_data['username']
-            message = EmailMessage(subject=subject, body=body, from_email=from_email, to=[to,])
+            body = render_to_string('user_dir/acc_active_email.html',{
+                'user':user,
+                'domain':current_site.domain,
+                "uid":urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            })
+            to_email = register.cleaned_data['email']
+            message = EmailMessage(subject=subject, body=body, to=[to_email, ])
             message.send()
-            user = register.save()
-            Profile.objects.create(user=user)
-            return redirect('products')
+            return HttpResponse('Please confirm your email address to complete the registration')
+        else:
+            register = SignupForm()
     return render(request, 'products/register.html', {'register': register})
 
 
@@ -107,3 +131,18 @@ def account_settings(request):
             form.save()
     context = {'form': form, 'orders': orders}
     return render(request, 'products/profile.html', context)
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        # return redirect('home')
+        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+    else:
+        return HttpResponse('Activation link is invalid!')
