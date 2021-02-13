@@ -31,7 +31,8 @@
                             </li>
                             <li><p><span class="glyphicon glyphicon-envelope one" style="width:50px;"></span>{{form.twitter_link}}
                             </p></li>
-                            <li><b>birthday</span>{{form.birth_date}}</b></li>
+                            <li><b>birthday{{form.birth_date}}</b></li>
+                            <li><b>wallet {{form.wallet}}</b></li>
                         </ul>
                         <hr>
                         <div class="col-sm-5 col-xs-6 tital ">{{form.description}}</div>
@@ -49,11 +50,12 @@
                                 <td>{{order.quantity}}</td>
                                 <td>{{order.status}}</td>
                                 <td>{{order.product.price}}</td>
-                            {% endfor %}
+                                {% endfor %}
                             </tr>
                         </table>
                     </div>
-                </form>{% endblock %}
+                </form>
+                {% endblock %}
             </div>
         </div>
     </div>

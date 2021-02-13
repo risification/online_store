@@ -1,19 +1,14 @@
 from django.contrib.auth import logout, login, authenticate
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from e_store.settings import EMAIL_HOST_USER
-from .forms import SignupForm
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .models import Products, Aboutus, Cotancts, Order, Profile
 from .tokens import account_activation_token
-from django.contrib.auth.models import User
 from .forms import *
-import math
 
 
 # Create your views here.
@@ -25,22 +20,33 @@ def products_page(request):
 
 def order_page(request, product_id):
     try:
+        profile = Profile.objects.get(user=request.user)
         product = Products.objects.get(id=product_id)
         total_price = 0
         sale = 0.2
         discount_price = 0
-
-        form = OrderForm(initial={'product': product})
+        form = OrderForm(initial={'product': product, 'user': request.user})
         if request.method == 'POST':
             form = OrderForm(request.POST)
             if form.is_valid():
-                form.save()
                 if product.sale:
                     total_price = product.price * form.cleaned_data['quantity']
                     discount_price = product.price * form.cleaned_data['quantity'] * sale
                     total_price = total_price - discount_price
                 else:
                     total_price = product.price * form.cleaned_data['quantity']
+                if form.cleaned_data['payment_method'] == 'wallet':
+                    if profile.wallet >= total_price:
+                        profile.wallet -= total_price
+                        profile.order_count += 1
+                        profile.save()
+                        return HttpResponse('Спасибо за покупку')
+                    else:
+                        return HttpResponse("не хватает денег")
+                else:
+                    profile.order_count += 1
+                    profile.save()
+                form.save()
         return render(request, 'products/order.html',
                       {'form': form, 'total_price': total_price, 'discount_price': discount_price})
     except Products.DoesNotExist:
@@ -57,11 +63,11 @@ def register_page(request):
             user.save()
             current_site = get_current_site(request)
             subject = "welcome to our  site!!!"
-            body = render_to_string('user_dir/acc_active_email.html',{
-                'user':user,
-                'domain':current_site.domain,
-                "uid":urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':account_activation_token.make_token(user),
+            body = render_to_string('user_dir/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
             })
             to_email = register.cleaned_data['email']
             message = EmailMessage(subject=subject, body=body, to=[to_email, ])
@@ -123,14 +129,16 @@ def logout_page(request):
 def account_settings(request):
     user = request.user.profile
     order_user = request.user
+    sale = 0
     orders = order_user.order_set.all()
     form = ProfileForm(instance=user)
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-    context = {'form': form, 'orders': orders}
+    context = {'form': form, 'orders': orders, 'sale': sale}
     return render(request, 'products/profile.html', context)
+
 
 def activate(request, uidb64, token):
     try:
