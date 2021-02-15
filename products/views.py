@@ -9,13 +9,16 @@ from django.template.loader import render_to_string
 from .models import Products, Aboutus, Cotancts, Order, Profile
 from .tokens import account_activation_token
 from .forms import *
+from .filters import ProductFilter
 
 
 # Create your views here.
 
 def products_page(request):
     products = Products.objects.all()
-    return render(request, 'products/product.html', {'products': products})
+    filter = ProductFilter(request.GET, queryset=products)
+    products = filter.qs
+    return render(request, 'products/product.html', {'products': products, 'filter': filter})
 
 
 def order_page(request, product_id):
@@ -136,7 +139,7 @@ def account_settings(request):
         form = ProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-    context = {'form': form, 'orders': orders, 'sale': sale}
+    context = {'form': form, 'orders': orders, 'sale': sale, }
     return render(request, 'products/profile.html', context)
 
 
